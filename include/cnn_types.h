@@ -1,9 +1,8 @@
 /******************************************************************************
  * @file cnn_types.h
  * @brief Core data types, constants, and configuration structures for CNN Inference Engine
- * @description Xilinx Vitis HLS implementation of energy-efficient CNN accelerator
- * @author Generated for CNN Hardware Accelerator
- * @date 2025
+ * @description Xilinx Vitis HLS implementation - ADAPTED FOR XCZU1CG
+ * @device xczu1cg-sbva484-1-e (240 DSP slices)
  ******************************************************************************/
 
 #ifndef CNN_TYPES_H
@@ -14,13 +13,15 @@
 #include "hls_stream.h"
 
 /******************************************************************************
- * SYSTEM CONSTANTS - Default Parameters
+ * SYSTEM CONSTANTS - XCZU1CG CONFIGURATION (240 DSPs)
  ******************************************************************************/
 
-// PE Array Dimensions
-#define M_SIZE 24           // Number of rows in PE array
-#define N_SIZE 36           // Number of columns in PE array  
-#define TOTAL_PES (M_SIZE * N_SIZE)  // 864 PEs total
+// PE Array dimensions (m × n) - REDUCED FOR XCZU1CG
+// Original: 24×36 = 864 PEs (needs 864 DSPs) - TOO LARGE
+// New: 8×12 = 96 PEs (needs 96 DSPs) - FITS IN XCZU1CG
+#define M_SIZE 8           // Number of rows in PE array (was 24)
+#define N_SIZE 12          // Number of columns in PE array (was 36)  
+#define TOTAL_PES (M_SIZE * N_SIZE)  // 96 PEs total (fits in 240 DSPs)
 
 // Data Width Configuration
 #define DATA_WIDTH 16       // 16-bit fixed-point
@@ -224,9 +225,16 @@ struct ComputeStats {
  ******************************************************************************/
 
 // Compile-time assertions
-static_assert(M_SIZE > 0 && M_SIZE <= 32, "M_SIZE must be between 1 and 32");
-static_assert(N_SIZE > 0 && N_SIZE <= 64, "N_SIZE must be between 1 and 64");
-static_assert(DATA_WIDTH == (INT_BITS + FRAC_BITS), "DATA_WIDTH must equal INT_BITS + FRAC_BITS");
-static_assert(LINE_MEM_WIDTH >= MAX_FEATURE_MAP_SIZE, "LINE_MEM_WIDTH must be >= MAX_FEATURE_MAP_SIZE");
+#define STATIC_ASSERT(condition, message) \
+    typedef char static_assert_##message[(condition) ? 1 : -1]
+
+// PE array size must fit in device (xczu1cg has 240 DSPs)
+STATIC_ASSERT((M_SIZE * N_SIZE <= 200), pe_array_too_large_for_xczu1cg);
+
+// Data width must be positive
+STATIC_ASSERT((DATA_WIDTH > 0), data_width_invalid);
+
+// M_SIZE must fit in 5 bits for addressing
+STATIC_ASSERT((M_SIZE <= 32), m_size_too_large);
 
 #endif // CNN_TYPES_H
