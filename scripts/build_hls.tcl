@@ -10,7 +10,7 @@ set top_function "cnn_inference_engine"
 set solution_name "solution1"
 
 # Target device: Xilinx Zynq UltraScale+ ZCU102
-set part "xczu9eg-ffvb1156-2-e"
+set part "xczu1cg-sbva484-1-e"
 
 # Clock period: 5ns = 200 MHz (conservative for ZCU102)
 set clock_period 5
