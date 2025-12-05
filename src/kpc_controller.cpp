@@ -97,7 +97,7 @@ void KPCController::control(
             }
             break;
             
-        case KPC_COMPUTE:
+        case KPC_COMPUTE: {
             // Enable computation
             compute_enable = true;
             
@@ -137,8 +137,9 @@ void KPCController::control(
                 current_state = KPC_STRIDE_H;
             }
             break;
+        }
             
-        case KPC_STRIDE_H:
+        case KPC_STRIDE_H: {
             // Horizontal stride: Move within same line memories
             next_stride = true;
             
@@ -167,8 +168,9 @@ void KPCController::control(
                 current_state = KPC_COMPUTE;
             }
             break;
+        }
             
-        case KPC_STRIDE_V:
+        case KPC_STRIDE_V: {
             // Vertical stride: Move to next set of line memories
             next_stride = true;
             
@@ -202,6 +204,7 @@ void KPCController::control(
                 current_state = KPC_COMPUTE;
             }
             break;
+        }
             
         case KPC_DONE:
             // Layer computation complete
