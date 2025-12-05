@@ -103,7 +103,7 @@ void IECController::control(
             }
             break;
         
-        case IEC_COMPUTE:
+        case IEC_COMPUTE: {
             // Step 5: Start processing while continuing to fetch remaining data
             compute_active = true;
             prefetch_active = true;  // Continue fetching while computing
@@ -126,6 +126,7 @@ void IECController::control(
                 current_state = IEC_NEXT_ITER;
             }
             break;
+        }
         
         case IEC_NEXT_ITER:
             // Check if we need to classify or output
