@@ -14,7 +14,7 @@
  ******************************************************************************/
 
 // MAC Unit: Multiply-Accumulate with 16-bit precision
-inline data_t mac_unit(data_t input, data_t weight, data_t accumulator, bool reset) {
+static inline data_t mac_unit(data_t input, data_t weight, data_t accumulator, bool reset) {
     #pragma HLS INLINE
     #pragma HLS PIPELINE II=1
     
@@ -26,13 +26,13 @@ inline data_t mac_unit(data_t input, data_t weight, data_t accumulator, bool res
 }
 
 // MAX Module: For max pooling
-inline data_t max_module(data_t a, data_t b) {
+static inline data_t max_module(data_t a, data_t b) {
     #pragma HLS INLINE
     return (a > b) ? a : b;
 }
 
 // MIN Module: For ReLU6 clipping
-inline data_t min_module(data_t a, data_t b) {
+static inline data_t min_module(data_t a, data_t b) {
     #pragma HLS INLINE
     return (a < b) ? a : b;
 }
@@ -43,7 +43,7 @@ struct SZDResult {
     bool is_zero;
 };
 
-inline SZDResult szd_detector(data_t value) {
+static inline SZDResult szd_detector(data_t value) {
     #pragma HLS INLINE
     
     SZDResult result;
@@ -53,7 +53,7 @@ inline SZDResult szd_detector(data_t value) {
 }
 
 // ReLU with SZD
-inline data_t relu_with_szd(data_t value) {
+static inline data_t relu_with_szd(data_t value) {
     #pragma HLS INLINE
     
     SZDResult szd = szd_detector(value);
@@ -61,7 +61,7 @@ inline data_t relu_with_szd(data_t value) {
 }
 
 // ReLU6 with SZD and MIN
-inline data_t relu6_with_szd(data_t value) {
+static inline data_t relu6_with_szd(data_t value) {
     #pragma HLS INLINE
     
     data_t relu_out = relu_with_szd(value);
